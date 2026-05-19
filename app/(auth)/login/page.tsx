@@ -11,7 +11,7 @@
 
 //   return <LoginClient />;
 // }
-
+export const dynamic = "force-dynamic";
 import { GalleryVerticalEnd } from "lucide-react";
 import LoginClient from "./login-client";
 
