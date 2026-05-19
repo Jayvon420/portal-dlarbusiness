@@ -16,6 +16,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { getCurrentUser } from "@/lib/auth";
 
 import { ThemeToggle } from "@/components/theme-toggle"; // ✅ ADD THIS
+export const dynamic = "force-dynamic";
 
 export default async function DashboardLayout({
   children,
