@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String       @id @default(cuid())
+  businessName String
+  firstName    String
+  lastName     String
+  username     String       @unique
+  email        String       @unique
+  password     String
+  role         Role         @default(USER)
+  isActive     Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  legacyId     Int?         @unique
+  expenses     Expense[]
+  files        FileUpload[]
+  folders      Folder[]
+  payrolls     Payroll[]
+  purchases    Purchase[]
+  sales        Sale[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Sale {
+  id         String   @id @default(cuid())
+  legacyId   Int?     @unique
+  date       DateTime
+  particular String
+  receipt    String?
+  amount     Decimal
+  createdAt  DateTime @default(now())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+  @@index([date])
+  @@index([legacyId])
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  legacyId    Int?     @unique
+  date        DateTime
+  expenseType String
+  receipt     String?
+  amount      Decimal
+  createdAt   DateTime @default(now())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+  @@index([date])
+  @@index([legacyId])
+}
+
+model Purchase {
+  id         String   @id @default(cuid())
+  legacyId   Int?     @unique
+  date       DateTime
+  particular String
+  receipt    String?
+  amount     Decimal
+  createdAt  DateTime @default(now())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+  @@index([date])
+  @@index([legacyId])
+}
+
+model Payroll {
+  id           String   @id @default(cuid())
+  legacyId     Int?     @unique
+  date         DateTime
+  employeeName String
+  salary       Decimal  @db.Decimal(12, 2)
+  late         Decimal  @db.Decimal(12, 2)
+  sss          Decimal  @db.Decimal(12, 2)
+  hdmf         Decimal  @db.Decimal(12, 2)
+  phic         Decimal  @db.Decimal(12, 2)
+  netPay       Decimal  @db.Decimal(12, 2)
+  createdAt    DateTime @default(now())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+  @@index([date])
+  @@index([legacyId])
+}
+
+model Folder {
+  id     String @id @default(cuid())
+  name   String
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  parentId String?
+  parent   Folder?  @relation("FolderTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children Folder[] @relation("FolderTree")
+
+  files FileUpload[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([userId])
+  @@index([parentId])
+}
+
+model FileUpload {
+  id   String @id @default(cuid())
+  name String
+  url  String
+  path String
+
+  mimeType String?
+  size     Int?
+
+  folderId String?
+  folder   Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([folderId])
+  @@index([userId])
+}
