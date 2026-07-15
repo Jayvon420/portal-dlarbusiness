@@ -32,25 +32,12 @@ export async function POST(req: Request) {
 
     const cookieStore = await cookies();
 
-    // cookieStore.set("session_userId", user.id, {
-    //   httpOnly: true,
-    //   path: "/",
-    //   sameSite: "lax",
-    //   secure: process.env.NODE_ENV === "production",
-    // });
-
-    const cookieOptions = {
+    cookieStore.set("session_userId", user.id, {
       httpOnly: true,
       path: "/",
-      sameSite: "lax" as const,
+      sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
-    };
-
-    cookieStore.set("session_userId", user.id, cookieOptions);
-
-    cookieStore.set("session_role", user.role, cookieOptions);
-
-    cookieStore.set("session_active", String(user.isActive), cookieOptions);
+    });
 
     return Response.json({
       success: true,

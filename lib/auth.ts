@@ -6,43 +6,19 @@ export async function getUserId() {
   return cookieStore.get("session_userId")?.value ?? null;
 }
 
-// export async function getCurrentUser() {
-//   try {
-//     const userId = await getUserId();
-
-//     if (!userId) return null;
-
-//     const user = await prisma.user.findUnique({
-//       where: { id: userId },
-//     });
-
-//     return user ?? null;
-//   } catch (err) {
-//     console.error("getCurrentUser error:", err);
-//     return null;
-//   }
-// }
 export async function getCurrentUser() {
-  console.time("getCurrentUser");
-
   try {
     const userId = await getUserId();
 
-    if (!userId) {
-      console.timeEnd("getCurrentUser");
-      return null;
-    }
+    if (!userId) return null;
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
 
-    console.timeEnd("getCurrentUser");
-
-    return user;
+    return user ?? null;
   } catch (err) {
-    console.timeEnd("getCurrentUser");
-    console.error(err);
+    console.error("getCurrentUser error:", err);
     return null;
   }
 }

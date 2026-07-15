@@ -4,7 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
-// export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",

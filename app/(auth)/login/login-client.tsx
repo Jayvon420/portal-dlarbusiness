@@ -56,9 +56,7 @@ export default function LoginClient() {
       }
 
       toast.success("Welcome back!");
-      // router.replace("/login");
-      router.replace("/");
-      router.refresh();
+      router.replace("/login");
     } catch {
       toast.error("Something went wrong");
     } finally {
