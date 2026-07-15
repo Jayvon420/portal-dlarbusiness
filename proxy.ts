@@ -13,38 +13,35 @@ export async function proxy(req: NextRequest) {
   const isAdmin = pathname.startsWith("/admin");
   const isRoot = pathname === "/";
 
-  // ❌ Not logged in
-  if (!session && (isDashboard || isAdmin)) {
-    return NextResponse.redirect(new URL("/login", req.url));
+  // Not logged in
+  if (!session) {
+    if (isDashboard || isAdmin) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+
+    return NextResponse.next();
   }
 
   let user = null;
 
-  if (session) {
+  try {
     user = await prisma.user.findUnique({
-      where: { id: session },
+      where: {
+        id: session,
+      },
       select: {
         id: true,
         role: true,
         isActive: true,
       },
     });
+  } catch (error) {
+    console.error("Proxy auth error:", error);
+    return NextResponse.next();
   }
 
-  // ❌ Invalid session
-  if (session && !user) {
-    const response = NextResponse.redirect(new URL("/login", req.url));
-
-    // Clear invalid cookie
-    response.cookies.delete("session_userId");
-    response.cookies.delete("session_role");
-    response.cookies.delete("session_active");
-
-    return response;
-  }
-
-  // ❌ Inactive account
-  if (user && !user.isActive) {
+  // Invalid session
+  if (!user) {
     const response = NextResponse.redirect(new URL("/login", req.url));
 
     response.cookies.delete("session_userId");
@@ -54,34 +51,41 @@ export async function proxy(req: NextRequest) {
     return response;
   }
 
-  // 🏠 Root route
+  // Disabled account
+  if (!user.isActive) {
+    const response = NextResponse.redirect(new URL("/login", req.url));
+
+    response.cookies.delete("session_userId");
+    response.cookies.delete("session_role");
+    response.cookies.delete("session_active");
+
+    return response;
+  }
+
+  // Root route
   if (isRoot) {
-    if (!user) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
-
     return NextResponse.redirect(
       new URL(user.role === "ADMIN" ? "/admin" : "/dashboard", req.url),
     );
   }
 
-  // 🔐 Admin protection
-  if (isAdmin && user?.role !== "ADMIN") {
+  // Admin protection
+  if (isAdmin && user.role !== "ADMIN") {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
-  // ❌ Admin cannot access user dashboard
-  if (isDashboard && user?.role === "ADMIN") {
+  // Admin cannot access dashboard
+  if (isDashboard && user.role === "ADMIN") {
     return NextResponse.redirect(new URL("/admin", req.url));
   }
 
-  // 🔐 USER-only dashboard
-  if (isDashboard && user?.role !== "USER") {
+  // User cannot access admin
+  if (isDashboard && user.role !== "USER") {
     return NextResponse.redirect(new URL("/admin", req.url));
   }
 
-  // ✅ Logged-in users cannot access login/register
-  if (user && isAuthPage) {
+  // Logged in users cannot visit login/register
+  if (isAuthPage) {
     return NextResponse.redirect(
       new URL(user.role === "ADMIN" ? "/admin" : "/dashboard", req.url),
     );
