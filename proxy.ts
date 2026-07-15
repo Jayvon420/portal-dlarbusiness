@@ -1,5 +1,3 @@
-
-
 // proxy deny admin in user dashboard
 
 import { NextResponse } from "next/server";

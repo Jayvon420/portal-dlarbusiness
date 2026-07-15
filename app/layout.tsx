@@ -11,8 +11,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "My Drive",
-  description: "File management system",
+  title: "Dlar System",
+  description:
+    "A secure client portal for managing tax, accounting, bookkeeping, and compliance services. Track your finances, access important documents, monitor filing deadlines, and communicate directly with your accountant—all in one place.",
 };
 
 export default function RootLayout({
