@@ -56,7 +56,7 @@ export default function LoginClient() {
       }
 
       toast.success("Welcome back!");
-      router.replace("/login");
+      router.replace(data.role === "ADMIN" ? "/admin" : "/dashboard");
     } catch {
       toast.error("Something went wrong");
     } finally {
