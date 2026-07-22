@@ -41,11 +41,23 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // 🆕 ADDED: ROOT ROUTE LOGIC (/)
-  // 👉 If user visits "/", redirect based on auth + role
+  // // 🆕 ADDED: ROOT ROUTE LOGIC (/)
+  // // 👉 If user visits "/", redirect based on auth + role
+  // if (isRoot) {
+  //   if (!user) {
+  //     return NextResponse.redirect(new URL("/login", req.url));
+  //   }
+
+  //   return NextResponse.redirect(
+  //     new URL(user.role === "ADMIN" ? "/admin" : "/dashboard", req.url),
+  //   );
+  // }
+
+  // ROOT ROUTE LOGIC (/)
+  // Public landing page
   if (isRoot) {
     if (!user) {
-      return NextResponse.redirect(new URL("/login", req.url));
+      return NextResponse.next(); // allow visitors
     }
 
     return NextResponse.redirect(
@@ -78,3 +90,7 @@ export async function proxy(req: NextRequest) {
 
   return NextResponse.next();
 }
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)"],
+};

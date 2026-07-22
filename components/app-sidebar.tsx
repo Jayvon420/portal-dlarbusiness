@@ -36,15 +36,15 @@ import { NavUser } from "@/components/nav-user";
 /* ================= DATA ================= */
 const data = {
   app: {
-    name: "DLAR Portal",
+    name: "DLAR Business HUB",
     logo: (
       <img
-        src="/dlar.jpg"
+        src="/dlar-logo.png"
         alt="Logo"
         className="size-full rounded-sm object-cover"
       />
     ),
-    subtitle: "Inventory System",
+    subtitle: "Business Management System",
     href: "/dashboard",
   },
 
@@ -56,7 +56,7 @@ const data = {
 
   navMain: [
     { title: "Payroll", url: "/dashboard/payroll", icon: <HandCoins /> },
-    { title: "Files", url: "/dashboard/files", icon: <FolderIcon /> },
+    { title: "Business Vault", url: "/dashboard/files", icon: <FolderIcon /> },
     {
       title: "Income Statement",
       url: "/dashboard/income",
