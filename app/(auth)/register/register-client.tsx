@@ -112,3 +112,16 @@
 //     </div>
 //   );
 // }
+export default function RegisterClient() {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="w-[420px] text-center">
+        <h1 className="text-2xl font-bold">Registration Disabled</h1>
+        <p className="mt-2 text-muted-foreground">
+          Registration is currently disabled. Please contact the administrator
+          for assistance.
+        </p>
+      </div>
+    </div>
+  );
+}
