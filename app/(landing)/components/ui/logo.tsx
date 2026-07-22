@@ -16,7 +16,7 @@ export default function Logo({ className, variant = "dark" }: LogoProps) {
     <Link href="/" className={`flex items-center gap-3 ${className ?? ""}`}>
       <Image
         src="/dlar-logo.png"
-        alt="DLAR Portal"
+        alt="DLAR Business HUB"
         width={52}
         height={52}
         priority
@@ -24,11 +24,12 @@ export default function Logo({ className, variant = "dark" }: LogoProps) {
       />
 
       <div className="leading-tight">
-        <h1 className={`text-lg font-bold ${titleColor}`}>DLAR Portal</h1>
+        <h1 className={`text-lg font-bold ${titleColor}`}>DLAR Business HUB</h1>
 
         <p className={`text-xs ${subtitleColor}`}>
-          Business Document Processing
+          Business Management and Compliance Platform
         </p>
+        <span className="text-xs text-blue-600 italic">Powered by DLAR PH</span>
       </div>
     </Link>
   );
