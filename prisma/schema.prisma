@@ -19,12 +19,15 @@ model User {
   isActive     Boolean      @default(true)
   createdAt    DateTime     @default(now())
   legacyId     Int?         @unique
+
   expenses     Expense[]
   files        FileUpload[]
   folders      Folder[]
   payrolls     Payroll[]
   purchases    Purchase[]
   sales        Sale[]
+
+  passwordResetTokens PasswordResetToken[]
 }
 
 enum Role {
@@ -141,5 +144,21 @@ model FileUpload {
   deletedAt DateTime?
 
   @@index([folderId])
+  @@index([userId])
+}
+
+
+model PasswordResetToken {
+  id         String   @id @default(cuid())
+
+  token      String   @unique
+
+  expiresAt  DateTime
+
+  createdAt  DateTime @default(now())
+
+  userId     String
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
 }
